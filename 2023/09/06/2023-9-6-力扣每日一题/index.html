@@ -1,0 +1,239 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>1123.最深叶节点的最近公共祖先 | Zirui Zhu</title><meta name="author" content="Zirui Zhu"><meta name="copyright" content="Zirui Zhu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="力扣每日一题1123. 最深叶节点的最近公共祖先 解题思路​        题目给定三个条件：  树中的节点数将在[1, 1000]的范围以内。 0 &lt;&#x3D; Node.val &lt;&#x3D; 1000 每个节点的值都是独一无二的。  ​        读题，如果只有一个最深叶节点，那么它本身就是它的最深叶节点。如果有两个最深叶节点，我们就应该找到一个节点，使之这两个叶节点能够存在与这两个节点的左右">
+<meta property="og:type" content="article">
+<meta property="og:title" content="1123.最深叶节点的最近公共祖先">
+<meta property="og:url" content="http://example.com/2023/09/06/2023-9-6-%E5%8A%9B%E6%89%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/index.html">
+<meta property="og:site_name" content="Zirui Zhu">
+<meta property="og:description" content="力扣每日一题1123. 最深叶节点的最近公共祖先 解题思路​        题目给定三个条件：  树中的节点数将在[1, 1000]的范围以内。 0 &lt;&#x3D; Node.val &lt;&#x3D; 1000 每个节点的值都是独一无二的。  ​        读题，如果只有一个最深叶节点，那么它本身就是它的最深叶节点。如果有两个最深叶节点，我们就应该找到一个节点，使之这两个叶节点能够存在与这两个节点的左右">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/2023-9-6-%E5%8A%9B%E6%89%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/likou.png">
+<meta property="article:published_time" content="2023-09-06T02:58:00.000Z">
+<meta property="article:modified_time" content="2023-09-06T15:24:01.716Z">
+<meta property="article:author" content="Zirui Zhu">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="每日一题">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/2023-9-6-%E5%8A%9B%E6%89%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/likou.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2023/09/06/2023-9-6-%E5%8A%9B%E6%89%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'mediumZoom',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '1123.最深叶节点的最近公共祖先',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-09-06 23:24:01'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">Loading...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (false) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/touxiang.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">5</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/shuoshuo/"><i class="fa-fw fa fa-comments-o"></i><span> 分享</span></a></li><li><a class="site-page child" href="/photos/"><i class="fa-fw fa fa-camera-retro"></i><span> 相册</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 影视</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/images/2023-9-6-%E5%8A%9B%E6%89%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/likou.png')"><nav id="nav"><span id="blog-info"><a href="/" title="Zirui Zhu"><span class="site-name">Zirui Zhu</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/shuoshuo/"><i class="fa-fw fa fa-comments-o"></i><span> 分享</span></a></li><li><a class="site-page child" href="/photos/"><i class="fa-fw fa fa-camera-retro"></i><span> 相册</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 影视</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">1123.最深叶节点的最近公共祖先</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2023-09-06T02:58:00.000Z" title="Created 2023-09-06 10:58:00">2023-09-06</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2023-09-06T15:24:01.716Z" title="Updated 2023-09-06 23:24:01">2023-09-06</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/">数据结构与算法</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/">每日一题</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">Word count:</span><span class="word-count">938</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">Reading time:</span><span>4min</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="1123.最深叶节点的最近公共祖先"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="力扣每日一题"><a href="#力扣每日一题" class="headerlink" title="力扣每日一题"></a>力扣每日一题</h1><h2 id="1123-最深叶节点的最近公共祖先"><a href="#1123-最深叶节点的最近公共祖先" class="headerlink" title="1123. 最深叶节点的最近公共祖先"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/lowest-common-ancestor-of-deepest-leaves/">1123. 最深叶节点的最近公共祖先</a></h2><p><img src="/images/2023-9-6-%E5%8A%9B%E6%89%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/image-20230906110858312.png" alt="image-20230906110858312"></p>
+<h2 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h2><p>​        题目给定三个条件：</p>
+<ol>
+<li>树中的节点数将在[1, 1000]的范围以内。</li>
+<li><code>0 &lt;= Node.val &lt;= 1000</code></li>
+<li>每个节点的值都是独一无二的。</li>
+</ol>
+<p>​        读题，如果只有一个最深叶节点，那么它本身就是它的最深叶节点。如果有两个最深叶节点，我们就应该找到一个节点，使之这两个叶节点能够存在与这两个节点的左右子树中。</p>
+<p>​        注意到题目的节点数最大不过为1000，因此即便使用$O(n^2)$的算法也不会超时。</p>
+<p>​        可以先遍历一遍二叉树，找到二叉树的最大深度，记为<code>max_depth</code>，再遍历一遍二叉树，判断某个节点的左右子树是否包含这个最深节点，即<code>if node1(depth==max_depth) in root-&gt;left and node2(depth==max_depth) in root-&gt;right</code>，且最好是从下往上去找，因为节点的值都是独一无二的，<strong>我们可以记录每一条到达二叉树的最深节点的路径，根据值的相等与否就能找到相应的祖先。如果路径数为1，那么就返回它本身，它本身就是最深节点的公共祖先。</strong></p>
+<p>举几个例子，图中到达最深节点的路径有两条：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[3, 5, 2, 7] 和 [3, 5, 2, 4]，其中2是离他们最近的公共祖先。</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">对[0, 1, 3, null, 2]这颗二叉树，到达最深节点的路径有一条：</span><br><span class="line"></span><br><span class="line">[0, 1, 2]，那么2就是离它最近的公共祖先。</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">对[1, 2, 3, 4, 5, 6, 7, null, null, 8, null, 9, 10, 11, 12]这颗二叉树，到达最深节点的路径有五条：</span><br><span class="line"></span><br><span class="line">[1, 2, 4, 8]</span><br><span class="line"></span><br><span class="line">[1, 2, 5, 9]</span><br><span class="line"></span><br><span class="line">[1, 2, 5, 10]</span><br><span class="line"></span><br><span class="line">[1, 3, 6, 11]</span><br><span class="line"></span><br><span class="line">[1, 3, 6, 12]</span><br></pre></td></tr></table></figure>
+<p>要找它们的最近公共祖先，就是它们几个中相等值的最后一位，记为<code>parent</code>。</p>
+<p>最后遍历一遍二叉树，<code>node-&gt;val == parent</code>就是我们要的那个节点。</p>
+<h3 id="解题代码"><a href="#解题代码" class="headerlink" title="解题代码"></a>解题代码</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"> * struct TreeNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     TreeNode *left;</span></span><br><span class="line"><span class="comment"> *     TreeNode *right;</span></span><br><span class="line"><span class="comment"> *     TreeNode() : val(0), left(nullptr), right(nullptr) &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) &#123;&#125;</span></span><br><span class="line"><span class="comment"> * &#125;;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">printf</span><span class="params">(vector&lt;vector&lt;<span class="type">int</span>&gt; &gt; res)</span></span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; res.<span class="built_in">size</span>(); i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">0</span>; j &lt; res[<span class="number">0</span>].<span class="built_in">size</span>(); j++)&#123;</span><br><span class="line">                cout &lt;&lt; res[i][j] &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            cout &lt;&lt; endl;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="function">TreeNode* <span class="title">lcaDeepestLeaves</span><span class="params">(TreeNode* root)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 首先取到二叉树的最大深度</span></span><br><span class="line">        <span class="type">int</span> max_depth = <span class="built_in">depth</span>(root, <span class="number">0</span>);</span><br><span class="line">        cout &lt;&lt; max_depth &lt;&lt; endl;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 获取遍历到最大深度的路径</span></span><br><span class="line">        vector&lt;vector&lt;<span class="type">int</span>&gt; &gt;res;</span><br><span class="line">        vector&lt;<span class="type">int</span>&gt; path;</span><br><span class="line">        <span class="built_in">dp_path</span>(root, path, res, max_depth);</span><br><span class="line">        </span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 遍历最大路径，找到相等的值中最后一个</span></span><br><span class="line">        <span class="type">int</span> num;</span><br><span class="line">        <span class="type">bool</span> flag;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = res[<span class="number">0</span>].<span class="built_in">size</span>() - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i --)&#123;</span><br><span class="line">            flag = <span class="literal">true</span>;</span><br><span class="line">            num = res[<span class="number">0</span>][i]; <span class="comment">// 先记录某一个可能的值，再进行接下来的遍历。</span></span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">0</span>; j &lt; res.<span class="built_in">size</span>(); j++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(res[j][i] != num)&#123;</span><br><span class="line">                    flag = <span class="literal">false</span>;</span><br><span class="line">                    <span class="keyword">break</span>;   </span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(flag)&#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 找到节点对应的值之后，找到对应的节点</span></span><br><span class="line">        TreeNode* node = <span class="built_in">dfs</span>(root, num);</span><br><span class="line">        <span class="keyword">return</span> node;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">depth</span><span class="params">(TreeNode* root, <span class="type">int</span> dp)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(root == <span class="literal">NULL</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> dp;</span><br><span class="line">        &#125;</span><br><span class="line">        dp += <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">max</span>(<span class="built_in">depth</span>(root-&gt;left, dp), <span class="built_in">depth</span>(root-&gt;right, dp));</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">dp_path</span><span class="params">(TreeNode* root, vector&lt;<span class="type">int</span>&gt; path, vector&lt;vector&lt;<span class="type">int</span>&gt; &gt; &amp;res, <span class="type">int</span> max_depth)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(root == <span class="literal">nullptr</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        path.<span class="built_in">push_back</span>(root-&gt;val);</span><br><span class="line">        <span class="keyword">if</span>(path.<span class="built_in">size</span>() == max_depth)&#123;</span><br><span class="line">            res.<span class="built_in">push_back</span>(path);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">dp_path</span>(root-&gt;left, path, res, max_depth);</span><br><span class="line">        <span class="built_in">dp_path</span>(root-&gt;right, path, res, max_depth);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function">TreeNode* <span class="title">dfs</span><span class="params">(TreeNode* root, <span class="type">int</span> num)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(root == <span class="literal">NULL</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(root-&gt;val == num)&#123;</span><br><span class="line">            <span class="keyword">return</span> root;</span><br><span class="line">        &#125;</span><br><span class="line">        TreeNode* l = <span class="built_in">dfs</span>(root-&gt;left, num);</span><br><span class="line">        TreeNode* r = <span class="built_in">dfs</span>(root-&gt;right, num);</span><br><span class="line">        <span class="keyword">if</span>(l != <span class="literal">NULL</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> l;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(r != <span class="literal">NULL</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> r;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="http://example.com">Zirui Zhu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://example.com/2023/09/06/2023-9-6-%E5%8A%9B%E6%89%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/">http://example.com/2023/09/06/2023-9-6-%E5%8A%9B%E6%89%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%AE%97%E6%B3%95/">算法</a><a class="post-meta__tags" href="/tags/%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/">每日一题</a></div><div class="post_share"><div class="social-share" data-image="/images/2023-9-6-%E5%8A%9B%E6%89%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/likou.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/09/06/2023-9-6-%E5%85%B3%E4%BA%8E%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" title="关于搭建博客的一些基础知识"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">关于搭建博客的一些基础知识</div></div></a></div><div class="next-post pull-right"><a href="/2023/09/05/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E5%88%B7%E9%A2%98%E7%89%88%EF%BC%89/" title="数据结构与算法"><img class="cover" src="/./../images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E5%88%B7%E9%A2%98%E7%89%88%EF%BC%89/suanfa.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">数据结构与算法</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><div><a href="/2023/09/05/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E5%88%B7%E9%A2%98%E7%89%88%EF%BC%89/" title="数据结构与算法"><img class="cover" src="/./../images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E5%88%B7%E9%A2%98%E7%89%88%EF%BC%89/suanfa.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-09-05</div><div class="title">数据结构与算法</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/touxiang.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Zirui Zhu</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">5</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">联系方式 QQ:3210975872 VX:Zzr5872</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8A%9B%E6%89%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98"><span class="toc-number">1.</span> <span class="toc-text">力扣每日一题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1123-%E6%9C%80%E6%B7%B1%E5%8F%B6%E8%8A%82%E7%82%B9%E7%9A%84%E6%9C%80%E8%BF%91%E5%85%AC%E5%85%B1%E7%A5%96%E5%85%88"><span class="toc-number">1.1.</span> <span class="toc-text">1123. 最深叶节点的最近公共祖先</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E9%A2%98%E6%80%9D%E8%B7%AF"><span class="toc-number">1.2.</span> <span class="toc-text">解题思路</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E9%A2%98%E4%BB%A3%E7%A0%81"><span class="toc-number">1.2.1.</span> <span class="toc-text">解题代码</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/09/06/test/" title="测试文档">测试文档</a><time datetime="2023-09-06T15:27:00.000Z" title="Created 2023-09-06 23:27:00">2023-09-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/09/06/2023-9-6-%E5%85%B3%E4%BA%8E%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" title="关于搭建博客的一些基础知识">关于搭建博客的一些基础知识</a><time datetime="2023-09-06T06:29:00.000Z" title="Created 2023-09-06 14:29:00">2023-09-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/09/06/2023-9-6-%E5%8A%9B%E6%89%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/" title="1123.最深叶节点的最近公共祖先"><img src="/images/2023-9-6-%E5%8A%9B%E6%89%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/likou.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="1123.最深叶节点的最近公共祖先"/></a><div class="content"><a class="title" href="/2023/09/06/2023-9-6-%E5%8A%9B%E6%89%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/" title="1123.最深叶节点的最近公共祖先">1123.最深叶节点的最近公共祖先</a><time datetime="2023-09-06T02:58:00.000Z" title="Created 2023-09-06 10:58:00">2023-09-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/09/05/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E5%88%B7%E9%A2%98%E7%89%88%EF%BC%89/" title="数据结构与算法"><img src="/./../images/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E5%88%B7%E9%A2%98%E7%89%88%EF%BC%89/suanfa.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="数据结构与算法"/></a><div class="content"><a class="title" href="/2023/09/05/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%88%E5%88%B7%E9%A2%98%E7%89%88%EF%BC%89/" title="数据结构与算法">数据结构与算法</a><time datetime="2023-09-05T15:27:00.000Z" title="Created 2023-09-05 23:27:00">2023-09-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/09/05/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE1%E2%80%94%E2%80%94%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/" title="个人博客搭建-hexo"><img src="/images/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE1%E2%80%94%E2%80%94%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/image-20230905210806984-1694011364573-1.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="个人博客搭建-hexo"/></a><div class="content"><a class="title" href="/2023/09/05/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE1%E2%80%94%E2%80%94%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/" title="个人博客搭建-hexo">个人博客搭建-hexo</a><time datetime="2023-09-05T15:27:00.000Z" title="Created 2023-09-05 23:27:00">2023-09-05</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/images/2023-9-6-%E5%8A%9B%E6%89%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/likou.png')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By Zirui Zhu</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, '']
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading the Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
