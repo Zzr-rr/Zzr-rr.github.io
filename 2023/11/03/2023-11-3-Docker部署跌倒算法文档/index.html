@@ -1,0 +1,416 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Docker部署跌倒算法文档 | Zirui Zhu</title><meta name="author" content="Zirui Zhu"><meta name="copyright" content="Zirui Zhu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="项目需求​        目前有一个跌倒算法，demo已经在主机（Windows）上跑通，需要将其部署到linux主机上并且通过docker发布。 ​        本文记录部署发布的全过程。开发主机为CentOs-7-x86_64。 Docker基本介绍​        Docker是一个包管理容器，开发过程中常出现代码在我的主机能跑而在别的平台上不能跑的问题，此时就需要Docker来发挥作用，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker部署跌倒算法文档">
+<meta property="og:url" content="http://example.com/2023/11/03/2023-11-3-Docker%E9%83%A8%E7%BD%B2%E8%B7%8C%E5%80%92%E7%AE%97%E6%B3%95%E6%96%87%E6%A1%A3/index.html">
+<meta property="og:site_name" content="Zirui Zhu">
+<meta property="og:description" content="项目需求​        目前有一个跌倒算法，demo已经在主机（Windows）上跑通，需要将其部署到linux主机上并且通过docker发布。 ​        本文记录部署发布的全过程。开发主机为CentOs-7-x86_64。 Docker基本介绍​        Docker是一个包管理容器，开发过程中常出现代码在我的主机能跑而在别的平台上不能跑的问题，此时就需要Docker来发挥作用，">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/touxiang.png">
+<meta property="article:published_time" content="2023-11-03T10:18:00.000Z">
+<meta property="article:modified_time" content="2023-11-06T13:46:43.467Z">
+<meta property="article:author" content="Zirui Zhu">
+<meta property="article:tag" content="部署">
+<meta property="article:tag" content="Docker">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/touxiang.png"><link rel="shortcut icon" href="/img/favico3n.png"><link rel="canonical" href="http://example.com/2023/11/03/2023-11-3-Docker%E9%83%A8%E7%BD%B2%E8%B7%8C%E5%80%92%E7%AE%97%E6%B3%95%E6%96%87%E6%A1%A3/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: 'days',
+  dateSuffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'mediumZoom',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Docker部署跌倒算法文档',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-11-06 21:46:43'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">Loading...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (false) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/touxiang.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">21</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">13</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">11</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/shuoshuo/"><i class="fa-fw fa fa-comments-o"></i><span> 分享</span></a></li><li><a class="site-page child" href="/photos/"><i class="fa-fw fa fa-camera-retro"></i><span> 相册</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 影视</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/shuixiang.png')"><nav id="nav"><span id="blog-info"><a href="/" title="Zirui Zhu"><span class="site-name">Zirui Zhu</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/shuoshuo/"><i class="fa-fw fa fa-comments-o"></i><span> 分享</span></a></li><li><a class="site-page child" href="/photos/"><i class="fa-fw fa fa-camera-retro"></i><span> 相册</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 影视</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Docker部署跌倒算法文档</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2023-11-03T10:18:00.000Z" title="Created 2023-11-03 18:18:00">2023-11-03</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2023-11-06T13:46:43.467Z" title="Updated 2023-11-06 21:46:43">2023-11-06</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%83%A8%E7%BD%B2/">部署</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%83%A8%E7%BD%B2/Docker/">Docker</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">Word count:</span><span class="word-count">2.1k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">Reading time:</span><span>8min</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Docker部署跌倒算法文档"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="项目需求"><a href="#项目需求" class="headerlink" title="项目需求"></a>项目需求</h1><p>​        目前有一个跌倒算法，demo已经在主机（Windows）上跑通，需要将其部署到linux主机上并且通过docker发布。</p>
+<p>​        本文记录部署发布的全过程。开发主机为CentOs-7-x86_64。</p>
+<h1 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h1><h2 id="基本介绍"><a href="#基本介绍" class="headerlink" title="基本介绍"></a>基本介绍</h2><p>​        Docker是一个包管理容器，开发过程中常出现代码在我的主机能跑而在别的平台上不能跑的问题，此时就需要Docker来发挥作用，Docker就是在一定程度上发挥了虚拟机的作用，同时也避免了虚拟机的高占用等等相关问题。</p>
+<h2 id="1-安装docker-ce社区版"><a href="#1-安装docker-ce社区版" class="headerlink" title="1. 安装docker-ce社区版"></a>1. 安装docker-ce社区版</h2><ul>
+<li><p>配置repo源<br>repo源是软件仓库源，是存储软件包和相关信息的位置（可以类比python中使用pip安装时使用的镜像源）。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">curl -o /etc/yum.repos.d/Centos-7.repo http://mirrors.aliyun.com/repo/Centos-7.repo</span><br><span class="line">curl -o /etc/yum.repos.d/docker-ce.repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo</span><br><span class="line"></span><br><span class="line">yum clean all &amp;&amp; yum makecache</span><br><span class="line">yum clean all: 清除yum缓存，删除已下载的软件包和元数据</span><br><span class="line">yum makecache: 重新生成yum缓存，它会从配置的镜像源中下载软件包的元数据（如软件包列表、版本信息等），并将其存储在本地以供后续的软件包管理操作使用</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>  <strong>执行结果</strong><img src="/images/2023-11-3-Docker部署跌倒算法文档/image-20231103211448247.png" alt="image-20231103211448247"></p>
+<p>  <img src="/images/2023-11-3-Docker部署跌倒算法文档/image-20231103211507270.png" alt="image-20231103211507270"></p>
+<p>  <img src="/images/2023-11-3-Docker部署跌倒算法文档/image-20231103211559436.png" alt="image-20231103211559436"><img src="/images/2023-11-3-Docker部署跌倒算法文档/image-20231103211633349.png" alt="image-20231103211633349"></p>
+<ul>
+<li><p>查看可下载版本</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum list docker-ce --showduplicates | sort -r</span><br></pre></td></tr></table></figure>
+<p><img src="/images/2023-11-3-Docker部署跌倒算法文档/image-20231103211936973.png" alt="image-20231103211936973"></p>
+</li>
+<li><p>安装</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 最新版</span></span><br><span class="line">yum install -y docker-ce</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定版本</span></span><br><span class="line">yum install -y docker-ce-<span class="number">23.0</span><span class="number">.6</span></span><br></pre></td></tr></table></figure>
+<p><img src="/images/2023-11-3-Docker部署跌倒算法文档/image-20231103212727542.png" alt="image-20231103212727542"></p>
+</li>
+</ul>
+<h2 id="2-启动docker-ce社区版"><a href="#2-启动docker-ce社区版" class="headerlink" title="2.启动docker-ce社区版"></a>2.启动docker-ce社区版</h2><ul>
+<li><p>设置开机启动</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl enable docker</span><br></pre></td></tr></table></figure>
+<p><img src="/images/2023-11-3-Docker部署跌倒算法文档/image-20231103212905398.png" alt="image-20231103212905398"></p>
+</li>
+<li><p>启动docker</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl start docker</span><br><span class="line">systemctl restart docker</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>停止docker</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl stop docker</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>其它</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">## 查看docker信息</span><br><span class="line">docker version</span><br><span class="line">## 查看docker信息</span><br><span class="line">docker info</span><br><span class="line">## 查看镜像</span><br><span class="line">docker images</span><br><span class="line">## 搜索镜像</span><br><span class="line">docker search ubuntu</span><br><span class="line">## 下载镜像</span><br><span class="line">docker pull ubuntu</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="3-配置镜像加速"><a href="#3-配置镜像加速" class="headerlink" title="3. 配置镜像加速"></a>3. 配置镜像加速</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors</span><br></pre></td></tr></table></figure>
+<p>首先进入以上网址，按照指示来安装加速器（每个账号不同）。</p>
+<p><img src="/images/2023-11-3-Docker部署跌倒算法文档/image-20231103213915133.png" alt="image-20231103213915133"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir -p /etc/docker</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo tee /etc/docker/daemon.json &lt;&lt;-&#x27;EOF&#x27;</span><br><span class="line">&#123;</span><br><span class="line">  &quot;registry-mirrors&quot;: [&quot;https://pf4hecjj.mirror.aliyuncs.com&quot;]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 重新加载配置并且重启</span><br><span class="line">sudo systemctl daemon-reload</span><br><span class="line">sudo systemctl restart docker</span><br></pre></td></tr></table></figure>
+<h1 id="举个栗子"><a href="#举个栗子" class="headerlink" title="举个栗子"></a>举个栗子</h1><ul>
+<li>需求：基于docker创建在ubuntu20.04系统上运行跌倒算法</li>
+<li>流程：<ul>
+<li>在centos7.9 + 安装docker</li>
+<li>基于docker软件<ul>
+<li>获取基础镜像ubuntu20.04</li>
+<li>在基础镜像基础上构建自定义镜像【ubuntu20.04 + python + 代码】</li>
+<li>基于镜像创建容器 + 运行</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="1-获取镜像"><a href="#1-获取镜像" class="headerlink" title="1. 获取镜像"></a>1. 获取镜像</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker search ubuntu</span><br><span class="line">docker pull ubuntu</span><br></pre></td></tr></table></figure>
+<p>这种方式相当于</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull ubuntu:latest</span><br></pre></td></tr></table></figure>
+<p>指定版本的操作</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull ubuntu:20.04</span><br></pre></td></tr></table></figure>
+<h2 id="2-构建镜像"><a href="#2-构建镜像" class="headerlink" title="2. 构建镜像"></a>2. 构建镜像</h2><h3 id="2-1-Dockerfile-语法"><a href="#2-1-Dockerfile-语法" class="headerlink" title="2.1 Dockerfile + 语法"></a>2.1 Dockerfile + 语法</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"># Dockerfile</span><br><span class="line"># Base images 基础镜像</span><br><span class="line">FROM ubuntu:20.04</span><br><span class="line"></span><br><span class="line"># MAINTAINER 维护者信息</span><br><span class="line">maintainer zhuzr 10221111@cumt.edu.cn</span><br><span class="line"></span><br><span class="line"># RUN 执行以下命令</span><br><span class="line">RUN apt update</span><br><span class="line">RUN apt install python3 python3-pip -y</span><br><span class="line">RUN pip3 install -r fall-demo/requirements.txt</span><br><span class="line">RUN mdkir -p /fall</span><br><span class="line"></span><br><span class="line"># 拷贝文件至工作目录</span><br><span class="line">COPY fall-demo /fall/fall-demo</span><br><span class="line"></span><br><span class="line"># 工作目录</span><br><span class="line">WORKDIR /fall</span><br><span class="line"></span><br><span class="line"># EXPOSE 映射端口</span><br><span class="line">EXPOSE 80</span><br><span class="line"></span><br><span class="line"># 容器启动时执行命令</span><br><span class="line">CMD [&quot;python3&quot;, &quot;app.py&quot;]</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>在docker宿主机centos7.9创建2个文件：</p>
+<ul>
+<li>Dockerfile</li>
+<li>fall-demo</li>
+</ul>
+</li>
+<li><p>命令构建自定义镜像（模板）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t fall/demo:0.0 . -f Dockerfile</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="2-2-基于镜像创建容器-运行"><a href="#2-2-基于镜像创建容器-运行" class="headerlink" title="2.2 基于镜像创建容器 + 运行"></a>2.2 基于镜像创建容器 + 运行</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker run fall/demo:0.0</span><br><span class="line">docker run -p 80:8000 fall/demo:0.0 # 将docker端口80映射到宿主机的8000端口（端口转发）</span><br><span class="line">docker run -d -p 80:8000 fall/demo:0.0 # 到后台运行,避免卡住终端的问题</span><br><span class="line">docker run -d -p 83:8000 --name v222 fall/demo:0.0 # 自己为其命名</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>查看目前正在运行的所有容器</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker ps</span><br><span class="line">docker ps -a 	# 查看所有运行过的容器</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>停止容器</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker stop 550</span><br><span class="line">docker stop b93 f33 dfa</span><br><span class="line"># 输入的是CONTAINER ID 的前几位</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="Docker实操"><a href="#Docker实操" class="headerlink" title="Docker实操"></a>Docker实操</h1><h2 id="Dockerfile"><a href="#Dockerfile" class="headerlink" title="Dockerfile"></a>Dockerfile</h2><p>​        详细说说dockerfile的几个写法，在Docker编写的指令大致上可以分为两类：1.创建镜像运行    2.容器运行</p>
+<ul>
+<li><p>Docker指定基础镜像</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">格式：</span><br><span class="line">	FROM &lt;image&gt;</span><br><span class="line">	FROM &lt;image&gt;:&lt;tag&gt;</span><br><span class="line">示例：</span><br><span class="line">	FROM mysql:5.7</span><br><span class="line">注意：</span><br><span class="line">	tag是可选的，如果不使用tag时，会使用latest版本的基础镜像</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>MAINTAINER 镜像维护者的信息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">格式：</span><br><span class="line">	MAINTAINER &lt;name&gt;</span><br><span class="line">示例：</span><br><span class="line">	MAINTAINER zhuzr</span><br><span class="line">	MAINTAINER 10221111@cumt.edu.cn</span><br><span class="line">	MAINTAINER zhuzr 10221111@cumt.edu.cn</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>ENV</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">格式：</span><br><span class="line">	ENV &lt;key&gt; &lt;value&gt;</span><br><span class="line">	ENV &lt;key&gt;=&lt;value&gt;</span><br><span class="line">示例：</span><br><span class="line">	ENV myName John</span><br><span class="line">	ENV myCat= fluffy</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>COPY|ADD 添加本地文件到镜像中，ADD会多一个自动解压的功能</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">COPY &lt;str&gt;... &lt;dest&gt;</span><br><span class="line">示例：</span><br><span class="line">	ADD hom* /mydir/ 	# 添加所有以&quot;hom&quot;开头的文件</span><br><span class="line">	ADD test relativeDir/	# 添加&quot;test&quot;到 $WORKDIR/relativeDir/</span><br><span class="line">	ADD test /absoluteDir/ 	# 添加&quot;test&quot;到 /absoluteDir/ </span><br></pre></td></tr></table></figure>
+</li>
+<li><p>WORKDIR  工作目录</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">格式：</span><br><span class="line">	WORKDIR /path/to/workdir</span><br><span class="line">示例：</span><br><span class="line">	WORKDIR /a # 此时的工作目录为/a</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>​          </p>
+<h2 id="构建"><a href="#构建" class="headerlink" title="构建"></a>构建</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker build -t fall/demo:1.0 . -f Dockerfile</span><br><span class="line">docker build -t fall/demo:1.1 . -f Dockerfile</span><br></pre></td></tr></table></figure>
+<pre><code>   这样子构建会进行缓存，即会使用原来的代码进行构建，下次构建的时候会采用原来的缓存进行构建（而不是使用新的文件，当然，这种方式在一定程度上也加快了构建速度）。
+</code></pre><p>​        如果不想用缓存，可以在构建前使用 —no-cache 指令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t fall/demo:1.0 . -f Dockerfile  --no-cache</span><br></pre></td></tr></table></figure>
+<h2 id="创建容器"><a href="#创建容器" class="headerlink" title="创建容器"></a>创建容器</h2><ol>
+<li><p>容器中必须要有一个前台进程，否则创建之后会立即销毁。</p>
+</li>
+<li><p>宿主机centos7.9运行是否需要前台？后台：使用-d指令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p 80:8000 fall/demo</span><br></pre></td></tr></table></figure>
+<p>仅：容器内部前台进程</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -p 81:8000 demo/fall:1.0</span><br></pre></td></tr></table></figure>
+<p>仅：宿主机后台进行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p 80:8000 ubuntu:20.04</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="容器常见指令"><a href="#容器常见指令" class="headerlink" title="容器常见指令"></a>容器常见指令</h2><h3 id="创建容器-1"><a href="#创建容器-1" class="headerlink" title="创建容器"></a>创建容器</h3><ol>
+<li><p>镜像含前台进程，创建容器+启动：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p 80:8000 demo/test</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>镜像不含前台进程，创建容器+启动：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p 80:8000 ubuntu:20.04</span><br></pre></td></tr></table></figure>
+<ol>
+<li><p>1 进入系统 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker run -ti -p 80:8000 ubuntu:20.04 bash</span><br><span class="line">docker run -ti -p 80:8000 ubuntu:20.04 sh</span><br></pre></td></tr></table></figure>
+<p><img src="/images/2023-11-3-Docker部署跌倒算法文档/image-20231104223415267.png" alt="image-20231104223415267"></p>
+</li>
+<li><p>2 添加前台进程</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -ti ubuntu:20.04 ping baidu.com</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="退出容器"><a href="#退出容器" class="headerlink" title="退出容器"></a>退出容器</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exit</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Ctrl + P + Q</span><br></pre></td></tr></table></figure>
+<h3 id="销毁进程"><a href="#销毁进程" class="headerlink" title="销毁进程"></a>销毁进程</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker ps -a # 查看一下所有容器</span><br><span class="line">docker ps # 查看一下正在运行的容器</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker stop 容器ID</span><br><span class="line">docker rm 容器ID</span><br></pre></td></tr></table></figure>
+<h3 id="常见操作"><a href="#常见操作" class="headerlink" title="常见操作"></a>常见操作</h3><ol>
+<li><p>镜像含前台进程，创建容器+启动</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p 80:8000 demo/test:1.0</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>镜像不含前台进程，进入容器后操作</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker run -ti ubuntu:20.04 bash</span><br><span class="line">docker run -ti ubuntu:20.04 sh</span><br><span class="line"></span><br><span class="line"># 如果想要退出的时候删去容器</span><br><span class="line">docker run -ti --rm ubuntu:20.04 bash</span><br><span class="line">docker run -ti --rm ubuntu:20.04 sh</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h1 id="导入导出和发布"><a href="#导入导出和发布" class="headerlink" title="导入导出和发布"></a>导入导出和发布</h1><ol>
+<li><p>Dockerfile —&gt; 构建 —&gt; 本地镜像库</p>
+</li>
+<li><p>本地导入导出</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker image save &lt;name&gt;&gt;&lt;dest&gt;</span><br></pre></td></tr></table></figure>
+<p><img src="/images/2023-11-3-Docker部署跌倒算法文档/image-20231104234325351.png" alt="image-20231104234325351"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker image load -i &lt;dest&gt;</span><br></pre></td></tr></table></figure>
+<p><img src="/images/2023-11-3-Docker部署跌倒算法文档/image-20231104234424697.png" alt="image-20231104234424697"></p>
+</li>
+<li><p>发布（注册DockerHub）</p>
+</li>
+</ol>
+<h1 id="开始部署"><a href="#开始部署" class="headerlink" title="开始部署"></a>开始部署</h1><p>​        梳理了一下前置的知识之后，我们正式开始部署我们的跌倒算法，首先了解一下需要部署文件的大致框架。</p>
+<p><img src="/images/2023-11-3-Docker部署跌倒算法文档/image-20231105091442457.png" alt="image-20231105091442457"></p>
+<p>​        文件中有一个<code>test_demo.py</code>，首要目的就是能够在容器中跑通这个代码。</p>
+<p>​        运行<code>test_demo</code>后，应当能够在<code>results</code>文件夹下看到36张处理后的图片。</p>
+<p><strong>执行界面</strong><img src="/images/2023-11-3-Docker部署跌倒算法文档/image-20231105091730777.png" alt="image-20231105091730777"></p>
+<p><strong>执行结果</strong></p>
+<p><img src="/images/2023-11-3-Docker部署跌倒算法文档/image-20231105091824684.png" alt="image-20231105091824684"></p>
+<p><strong>为了方便起见，这里选择直接使用docker desktop进行开发</strong></p>
+<p>简单说一下<code>docker desktop</code>是什么。</p>
+<p>一般来说我们开发项目的流程是Windows开发-&gt;cp至Linux-&gt;使用docker打包。</p>
+<p>中途需要经过linux的中转，对于我们平时的开发来说并不方面，因此<code>docker for windows</code>的概念应运而生。即在windows中使用docker，因此可以省去一些额外的步骤，在windows中安装docker可以上网自行查询方法（需要WSL）。我们选择的是<code>docker desktop</code>。</p>
+<p>类似于在linux的终端，安装好docker后，在windows的终端中也可以使用docker的相关指令。</p>
+<p><img src="/images/2023-11-3-Docker部署跌倒算法文档/image-20231105114839387.png" alt="image-20231105114839387"></p>
+<p>打开我们安装好的<code>docker desktop</code>，简单介绍一下界面。</p>
+<p><img src="/images/2023-11-3-Docker部署跌倒算法文档/image-20231106213326163.png" alt="image-20231106213326163"></p>
+<p>如图所示，整体的界面对于linux来说更加直观，我们点进右上角进行镜像的配置。</p>
+<p><img src="/images/2023-11-3-Docker部署跌倒算法文档/image-20231106213437573.png" alt="image-20231106213437573"></p>
+<p>稍微了解一下，就可以开始使用了，在cmd中使用<code>docker run</code>创建容器后，能够在主界面的左侧<code>Containers</code>中看到我们创建好的容器。</p>
+<p><img src="/images/2023-11-3-Docker部署跌倒算法文档/image-20231106213622532.png" alt="image-20231106213622532"></p>
+<p>使用docker创建容器后，进入容器内（可以直接在docker desktop中使用终端(exec)）直接运行demo文件，查看报错信息，一一调试。</p>
+<p><img src="/images/2023-11-3-Docker部署跌倒算法文档/image-20231105114424614.png" alt="image-20231105114424614"></p>
+<p><img src="/images/2023-11-3-Docker部署跌倒算法文档/image-20231105114940323.png" alt="image-20231105114940323"></p>
+<p><img src="/images/2023-11-3-Docker部署跌倒算法文档/image-20231105114948551.png" alt="image-20231105114948551"></p>
+<p><img src="/images/2023-11-3-Docker部署跌倒算法文档/image-20231105115243852.png" alt="image-20231105115243852"></p>
+<p><strong>打包</strong></p>
+<p>容器调整完成之后，直接对镜像进行打包即可。</p>
+<p>打包分为两步：</p>
+<ol>
+<li><p>首先将容器打包为镜像。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker commit &lt;mycontainer&gt; &lt;new_image_name&gt;:&lt;new_tag&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>再将镜像导出为tar文件供其他人使用。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker save -o &lt;images&gt;.tar &lt;images&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>如果想要加载别人的包，可以使用这个命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker load [options] &lt; file.tar</span><br></pre></td></tr></table></figure>
+<p> 至此，打包工作结束。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="http://example.com">Zirui Zhu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://example.com/2023/11/03/2023-11-3-Docker%E9%83%A8%E7%BD%B2%E8%B7%8C%E5%80%92%E7%AE%97%E6%B3%95%E6%96%87%E6%A1%A3/">http://example.com/2023/11/03/2023-11-3-Docker%E9%83%A8%E7%BD%B2%E8%B7%8C%E5%80%92%E7%AE%97%E6%B3%95%E6%96%87%E6%A1%A3/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E9%83%A8%E7%BD%B2/">部署</a><a class="post-meta__tags" href="/tags/Docker/">Docker</a></div><div class="post_share"><div class="social-share" data-image="/img/touxiang.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> Donate</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/img/wechat.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="/img/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="/img/alipay.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2023/09/21/2023-9-21-2603.-%E6%94%B6%E9%9B%86%E6%A0%91%E4%B8%AD%E9%87%91%E5%B8%81/" title="2603. 收集树中金币"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">2603. 收集树中金币</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/touxiang.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Zirui Zhu</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">21</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">13</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">11</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">博客主要用于记录学习的路线和过程,欢迎添加我的联系方式，请备注来意,QQ:3210975872,VX:Zzr5872</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E9%9C%80%E6%B1%82"><span class="toc-number">1.</span> <span class="toc-text">项目需求</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Docker"><span class="toc-number">2.</span> <span class="toc-text">Docker</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E4%BB%8B%E7%BB%8D"><span class="toc-number">2.1.</span> <span class="toc-text">基本介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%AE%89%E8%A3%85docker-ce%E7%A4%BE%E5%8C%BA%E7%89%88"><span class="toc-number">2.2.</span> <span class="toc-text">1. 安装docker-ce社区版</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%90%AF%E5%8A%A8docker-ce%E7%A4%BE%E5%8C%BA%E7%89%88"><span class="toc-number">2.3.</span> <span class="toc-text">2.启动docker-ce社区版</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E9%85%8D%E7%BD%AE%E9%95%9C%E5%83%8F%E5%8A%A0%E9%80%9F"><span class="toc-number">2.4.</span> <span class="toc-text">3. 配置镜像加速</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%BE%E4%B8%AA%E6%A0%97%E5%AD%90"><span class="toc-number">3.</span> <span class="toc-text">举个栗子</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E8%8E%B7%E5%8F%96%E9%95%9C%E5%83%8F"><span class="toc-number">3.1.</span> <span class="toc-text">1. 获取镜像</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%9E%84%E5%BB%BA%E9%95%9C%E5%83%8F"><span class="toc-number">3.2.</span> <span class="toc-text">2. 构建镜像</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-Dockerfile-%E8%AF%AD%E6%B3%95"><span class="toc-number">3.2.1.</span> <span class="toc-text">2.1 Dockerfile + 语法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-%E5%9F%BA%E4%BA%8E%E9%95%9C%E5%83%8F%E5%88%9B%E5%BB%BA%E5%AE%B9%E5%99%A8-%E8%BF%90%E8%A1%8C"><span class="toc-number">3.3.</span> <span class="toc-text">2.2 基于镜像创建容器 + 运行</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Docker%E5%AE%9E%E6%93%8D"><span class="toc-number">4.</span> <span class="toc-text">Docker实操</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Dockerfile"><span class="toc-number">4.1.</span> <span class="toc-text">Dockerfile</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%84%E5%BB%BA"><span class="toc-number">4.2.</span> <span class="toc-text">构建</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%AE%B9%E5%99%A8"><span class="toc-number">4.3.</span> <span class="toc-text">创建容器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%B9%E5%99%A8%E5%B8%B8%E8%A7%81%E6%8C%87%E4%BB%A4"><span class="toc-number">4.4.</span> <span class="toc-text">容器常见指令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%AE%B9%E5%99%A8-1"><span class="toc-number">4.4.1.</span> <span class="toc-text">创建容器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%80%E5%87%BA%E5%AE%B9%E5%99%A8"><span class="toc-number">4.4.2.</span> <span class="toc-text">退出容器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%94%80%E6%AF%81%E8%BF%9B%E7%A8%8B"><span class="toc-number">4.4.3.</span> <span class="toc-text">销毁进程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E6%93%8D%E4%BD%9C"><span class="toc-number">4.4.4.</span> <span class="toc-text">常见操作</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AF%BC%E5%85%A5%E5%AF%BC%E5%87%BA%E5%92%8C%E5%8F%91%E5%B8%83"><span class="toc-number">5.</span> <span class="toc-text">导入导出和发布</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BC%80%E5%A7%8B%E9%83%A8%E7%BD%B2"><span class="toc-number">6.</span> <span class="toc-text">开始部署</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/11/03/2023-11-3-Docker%E9%83%A8%E7%BD%B2%E8%B7%8C%E5%80%92%E7%AE%97%E6%B3%95%E6%96%87%E6%A1%A3/" title="Docker部署跌倒算法文档">Docker部署跌倒算法文档</a><time datetime="2023-11-03T10:18:00.000Z" title="Created 2023-11-03 18:18:00">2023-11-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/09/21/2023-9-21-2603.-%E6%94%B6%E9%9B%86%E6%A0%91%E4%B8%AD%E9%87%91%E5%B8%81/" title="2603. 收集树中金币">2603. 收集树中金币</a><time datetime="2023-09-21T01:39:00.000Z" title="Created 2023-09-21 09:39:00">2023-09-21</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/09/20/2023-9-20-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" title="计算机网络">计算机网络</a><time datetime="2023-09-20T06:29:00.000Z" title="Created 2023-09-20 14:29:00">2023-09-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/09/20/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8github/" title="如何使用github">如何使用github</a><time datetime="2023-09-20T06:29:00.000Z" title="Created 2023-09-20 14:29:00">2023-09-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/09/18/2023-9-18-%E5%A4%87%E8%B5%9B%E7%99%BE%E5%BA%A6%E4%B9%8B%E6%98%9F/" title="备赛百度之星">备赛百度之星</a><time datetime="2023-09-18T14:36:00.000Z" title="Created 2023-09-18 22:36:00">2023-09-18</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/img/shuixiang.png')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By Zirui Zhu</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, '']
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading the Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
