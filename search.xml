@@ -1749,4 +1749,359 @@ num=\sum_{i=1}^{m}\lfloor\sqrt{\frac{t}{r_i}}\rfloor</script><p>我们注意到�
         <tag>CSAPP</tag>
       </tags>
   </entry>
+  <entry>
+    <title>CUMT计算机组成原理</title>
+    <url>/2023/12/20/2023-12-20-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/</url>
+    <content><![CDATA[<h2 id="第一章-计算机系统概论"><a href="#第一章-计算机系统概论" class="headerlink" title="第一章 计算机系统概论"></a>第一章 计算机系统概论</h2><h3 id="计算机的发展简史"><a href="#计算机的发展简史" class="headerlink" title="计算机的发展简史"></a>计算机的发展简史</h3><h4 id="五代变化"><a href="#五代变化" class="headerlink" title="五代变化"></a>五代变化</h4><ol>
+<li>电子管计算机</li>
+<li>晶体管计算机</li>
+<li>中小规模集成电路计算机</li>
+<li>大规模、超大规模集成电路计算机</li>
+<li>巨大规模集成电路计算机</li>
+</ol>
+<h2 id="第二章-运算方法和运算器"><a href="#第二章-运算方法和运算器" class="headerlink" title="第二章 运算方法和运算器"></a>第二章 运算方法和运算器</h2><h3 id="数据和文字的表示方法"><a href="#数据和文字的表示方法" class="headerlink" title="数据和文字的表示方法"></a>数据和文字的表示方法</h3><h4 id="数据格式"><a href="#数据格式" class="headerlink" title="数据格式"></a>数据格式</h4><ol>
+<li><p>定点数：固定小数点的位置<br>通常用<strong>纯小数</strong>或者<strong>纯整数</strong>来表示，如：</p>
+</li>
+<li><pre><code># 纯整数
+100(D) = 01100100(B)
+# 纯小数
+0.125(D) = 0.00100000(B)
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">3. 对于数字$x_&#123;n&#125;x_&#123;n-1&#125;x_&#123;n-2&#125;x_&#123;n-3&#125;...x_&#123;1&#125;x_&#123;0&#125;$，其中$x_&#123;n&#125;$代表了符号位，剩余的部分如果表示的是**纯整数**，其绝对值范围是$0 \leq \left| x \right| \leq 2^n-1$，剩余部分如果表示的是**纯小数**，其取值范围为$0 \leq \left| x \right| \leq 1 - 2^&#123;-n&#125;$。目前计算机多用于整数运算。</span><br><span class="line"></span><br><span class="line">4. 浮点数：小数点位置浮动</span><br><span class="line"></span><br><span class="line">5. $$</span><br><span class="line">   N=2^e.M</span><br><span class="line">   $$</span><br><span class="line"></span><br><span class="line">6. $M$称为浮点数的**尾数**，是一个纯小数，$e$是浮点数的比例因子，称为浮点数的**指数**，2则是**基数**，是一个常见的对二进制机器的记数。</span><br><span class="line">   ![image-20231220113752791](/images/2023-12-20-计算机组成原理/image-20231220113752791.png)</span><br><span class="line">   ![image-20231220113825935](/images/2023-12-20-计算机组成原理/image-20231220113825935.png)</span><br><span class="line"></span><br><span class="line">7. 阶符就是符号位，阶码对应指数，数符就是基数，尾数就是$M$。</span><br><span class="line"></span><br><span class="line">8. 浮点数的规格化表示就是尾数绝对值大于等于0.5，在形式上表现为$M=0.1...$，最高位1视为隐藏在小数点的左侧，提高数据表示的精度。</span><br><span class="line">   指数e=阶码-127（为什么要用127这个值，0~255是阶码能够表示的范围，为了表示负数阶码，-127~127为32位浮点型需要表示的阶码数字范围，通过增加一个bias，能够让所有的阶码在表示的时候都以正数的形式出现，比如说$$19.625 = 10011.101 = 1.0011101 * 2^4$$，4是他真实的指数值，4+127=131是它在内存中存储的值。</span><br><span class="line">   64位是1位符号位，11位指数，52位尾数，其符号位的偏置(Bias)为1023。</span><br><span class="line"></span><br><span class="line">9. 十进制数串：</span><br><span class="line"></span><br><span class="line">   - 字符串的表现形式：一个字节存放一个十进制的数位或符号位。</span><br><span class="line"></span><br><span class="line">   - 压缩的十进制数串形式：一个字节存放两个十进制的数位。</span><br><span class="line"></span><br><span class="line">#### 数的机器码表示</span><br><span class="line"></span><br><span class="line">1. 原码</span><br><span class="line"></span><br><span class="line">   - 简单理解：第一位为符号位，后面的按二进制串相加即可。</span><br><span class="line">   - 浮点数原码定义：阶码部分按照**定点整数**的方法进行编码；尾数部分按照**定点小数**的方法进行编码。</span><br><span class="line">   - 符号位：0为正，1为负。</span><br><span class="line">   - 不便于加减运算，故引入补码</span><br><span class="line"></span><br><span class="line">2. 补码</span><br><span class="line"></span><br><span class="line">   - 模的概念：模数，79-38和79+62的后两位数字是相同的，也就是说-38和+62在意义上是等价的，前提是对模为100成立。</span><br><span class="line">   - 溢出量是多少，模数就是多少。</span><br><span class="line">   - $$[x]_&#123;补&#125;=x+m(MOD M)$$，因此正数的补码和其本身一致。</span><br><span class="line">   - 0的补码只有一种形式。</span><br><span class="line">   - 转换方式：原码除符号位外按位取反+1</span><br><span class="line"></span><br><span class="line">   ![image-20231220144720895](/images/2023-12-20-计算机组成原理/image-20231220144720895.png)</span><br><span class="line"></span><br><span class="line">3. 反码</span><br><span class="line"></span><br><span class="line">   - 浮点数反码定义：阶码部分按照定点整数的方法进行编码；尾数部分按照定点小数的方法进行编码。</span><br><span class="line">   - 转换方式：除了符号位外，其余按位取反。</span><br><span class="line"></span><br><span class="line">#### 字符和字符串的编码</span><br><span class="line"></span><br><span class="line">1. ASCII码</span><br><span class="line">2. 汉字的编码表示</span><br><span class="line">   - 输入编码：数字编码、拼音码、字形编码等</span><br><span class="line">   - 机内编码：一般用两个字节来实现</span><br><span class="line">   - 输出编码：字模码</span><br><span class="line">3. 校验码</span><br><span class="line">   - 检错码：奇偶校验码，就是1的个数是奇数还是偶数。</span><br><span class="line">   - 纠错码：</span><br><span class="line">     - 海明码：多重求校验码</span><br><span class="line">     - 循环冗余校验码（计网中也有）</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### 定点加法、减法运算</span><br><span class="line"></span><br><span class="line">#### 定点补码加减法的实现</span><br><span class="line"></span><br><span class="line">![image-20231220145728617](/images/2023-12-20-计算机组成原理/image-20231220145728617.png)</span><br><span class="line"></span><br><span class="line">从$$[Y]_&#123;补&#125;$$到$$[-Y]_&#123;补&#125;$$可以这样理解：Y和-Y互为相反数，对于Y和-Y的原码，除了第一位符号位外其余都相同，将它们都转换为补码，其符号位为1的那个数字要将剩余的位按位取反+1，另一个不变，他们补码中的**符号位是不同的**，符号位取反，**剩余的数码位置可以通过按位取反+1的操作复原**。因此将每一位（包括符号位）取反且末位加1，即可实现$$[-Y]_&#123;补&#125;$$。</span><br><span class="line"></span><br><span class="line">#### ![image-20231220150933799](/images/2023-12-20-计算机组成原理/image-20231220150933799.png)溢出概念和检测方法</span><br><span class="line"></span><br><span class="line">当且仅当两数为同符号的时候才有可能溢出（如果两数异号，能够说明两数都没有达到溢出，和另一个数作用只能使他们溢出的程度减小）。</span><br><span class="line"></span><br><span class="line">因此溢出分为上溢（两个正数相加）和下溢（两个负数相加）。</span><br><span class="line"></span><br><span class="line">两种检测方式：</span><br><span class="line"></span><br><span class="line">1. 双符号位法（变形补码/模4补码）</span><br><span class="line"></span><br><span class="line">   - 溢出$$T = V_i \oplus V_&#123;i-1&#125;$$，两位符号位如果是**异号**，说明发生了溢出。</span><br><span class="line">   - **最高符号位**始终指示正确的符号。</span><br><span class="line"></span><br><span class="line">2. 单符号位法</span><br><span class="line"></span><br><span class="line">   - 最高有效位有进位而符号位没有进位，称为上溢；最高有效位无进位而符号位有进位，称为下溢。</span><br><span class="line"></span><br><span class="line">   - 即当且仅当最高有效位和符号位进位与否同步才没有发生溢出。</span><br><span class="line"></span><br><span class="line">   - 溢出$$V=C_f \oplus  C_0$$。</span><br><span class="line"></span><br><span class="line">     ![image-20231220152912872](/images/2023-12-20-计算机组成原理/image-20231220152912872.png)![image-20231220153004330](/images/2023-12-20-计算机组成原理/image-20231220153004330.png)如图所示的N位行波进位加法减法器的溢出位表达式为$$F=C_n \oplus C_&#123;n-1&#125;$$，也就是采用的单符号位法。</span><br><span class="line"></span><br><span class="line">     同时有一个方式控制线M，当M=0时，B和方式控制M经过一个与非门，输出和B的每一位相同；当M=1时，B和方式控制M经过一个与非门，输出和B的每一位相反，也就是将B的每一位取反，注意到第一位的进位输入$$C_0$$也是由M来控制的，M=1就会多加一个1，也就是B按位取反再加1，$$[-B]_&#123;补&#125;$$就求出来了。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### 定点乘法运算</span><br><span class="line"></span><br><span class="line">1. 原码并行乘法</span><br><span class="line">   运算规则：**符号位**和**数值部分（绝对值）**分别运算。</span><br><span class="line">   ![img](/images/2023-12-20-计算机组成原理/Fq8pX-WBOTLBgmljUsLrHQwlfFxi.png)</span><br><span class="line"></span><br><span class="line">2. 不带符号的阵列乘法器（主要）</span><br><span class="line">   增加全加器的个数，实现并行操作，提高速度。首先用”与“门，产生m×n个被加数&#123;$$&#123;a_ib_j|0\leq i \leq m - 1,0 \leq j \leq n - 1&#125;$$&#125;；再用阵列全加器，快速相加，实现乘法。</span><br><span class="line">   实现**n位乘n位**时，需要$$n(n-1)$$个全机器（FA）和n×n个”与“门。</span><br><span class="line">   ![image-20231220154429061](/images/2023-12-20-计算机组成原理/image-20231220154429061.png)</span><br><span class="line"></span><br><span class="line">3. 带符号的阵列乘法器</span><br><span class="line"></span><br><span class="line">   - **求补电路**的设计原理：求补实际上就是将所有位按位取反之后加1，也就是说它的最末位如果为0，求反+1之后会进位到第一个原来位置为1的位上。（剩余的前面的位置就直接取反即可）。</span><br><span class="line">     - 用符号位作为控制信号。</span><br><span class="line">     - 从最末位开始找到第一个1，该位以左全部求反，该位及以右的位不变。</span><br><span class="line"></span><br><span class="line">   ![image-20231220155554704](/images/2023-12-20-计算机组成原理/image-20231220155554704.png)</span><br><span class="line"></span><br><span class="line">   带符号的阵列乘法器核心还是乘法阵列器，先求出补码，最后把输出变成带符号的数（注意看左边的与非门，用于控制符号位）。</span><br><span class="line"></span><br><span class="line">#### 定点除法运算</span><br><span class="line"></span><br><span class="line">1. 计算机做除法有两个关键点，一是判断本次除法是否溢出，二是每次上商之前总是要做一次余数做减数的操作。</span><br><span class="line">2. 判断溢出：将被除数的高n位减去除数，若余数大于0，则本次运算溢出，立即终止，若余数小于0，则应将除数加回去恢复被除数，继续除法运算。</span><br><span class="line">3. 恢复余数法：每次上商之前总是要做一次余数做除数的操作，若余数大于或等于0，则表示够减，商1后应将该余数左移一位得到新余数，若余数小于0，则表示不够减，商0且本次运算不该做，应将除数加回去，恢复原来的余数后将其左移一位得到新余数。</span><br><span class="line"></span><br><span class="line">![image-20231220162235230](/images/2023-12-20-计算机组成原理/image-20231220162235230.png)</span><br><span class="line"></span><br><span class="line">恢复余数法，由于要恢复余数，使除法进行过程的步数不固定，因此控制比较复杂。实际中常用**不恢复余数法**，又称**加减交替法**。其特点是运算过程中如出现不够减，则**不必恢复余数**，根据余数符号可以继续往下运算从而简化运算。</span><br><span class="line"></span><br><span class="line">![image-20231220162455651](/images/2023-12-20-计算机组成原理/image-20231220162455651.png)</span><br><span class="line"></span><br><span class="line">简单来说，加减交替法：</span><br><span class="line"></span><br><span class="line">1. $$R_&#123;i + 1&#125; \geq 0$$，则商1，下次做$$2R_&#123;i+1&#125; - Y$$。</span><br><span class="line">2. $$R_&#123;i + 1&#125; \leq 0$$，则商0，下次做$$2R_&#123;i+1&#125; + Y$$。</span><br><span class="line"></span><br><span class="line">![image-20231220162657213](/images/2023-12-20-计算机组成原理/image-20231220162657213.png)</span><br><span class="line"></span><br><span class="line">![image-20231220164845852](/images/2023-12-20-计算机组成原理/image-20231220164845852.png)</span><br><span class="line"></span><br><span class="line">并行除法器</span><br><span class="line"></span><br><span class="line">1. 可控加法/减法单元：用于并行除法流水逻辑阵列中，有四个输出端和四个输入端。输入线P=0时，做加法；P=1时，做减法。</span><br><span class="line">   ![image-20231220165040836](/images/2023-12-20-计算机组成原理/image-20231220165040836.png)P用作控制，其A和B作为输入，C作为进位输入。通过真值表法可以得出上述表达式中的结果，根据该结果连接电路图即可。</span><br><span class="line"></span><br><span class="line">   ![image-20231220165100269](/images/2023-12-20-计算机组成原理/image-20231220165100269.png)</span><br><span class="line"></span><br><span class="line">#### 定点运算器的组成</span><br><span class="line"></span><br><span class="line">算术/逻辑运算单元、数据缓冲寄存器、通用寄存器、多路转换器和数据总线等。</span><br><span class="line"></span><br><span class="line">1. 多功能算术/逻辑运算单元：</span><br><span class="line">   行波进位加法器的缺点：串行进位，速度慢；只能完成加减运算而不能完成逻辑操作；</span><br><span class="line">   - 基本思想：输入通过**控制参数**$$S_0,S_1,S_2,S_3$$，形成**组合函数**$$X_i,Y_i$$，$$S_0S_1$$控制$$Y_i$$，$$S_2S_3$$控制$$X_i$$。</span><br><span class="line">     ![image-20231220171555721](/images/2023-12-20-计算机组成原理/image-20231220171555721.png)</span><br><span class="line">   - 用这样的算术单元能够对AB实现不同的操作，因此为后面先行进位操作提供了先决条件。</span><br><span class="line">     ![img](/images/2023-12-20-计算机组成原理/FnwLnepU96PcfkBXAkvqWxWOUuJK.png)</span><br><span class="line">2. 内部总线</span><br><span class="line">   按照总线所处的位置分为**内部**总线和**外部**总线，按照总线的逻辑结构，总线分为**单向、双向**传输总线。</span><br><span class="line">3. 定点运算器的基本结构</span><br><span class="line">   - 单总线结构的运算器：数据传输通过分时的方式。</span><br><span class="line">   - 双总线结构的运算器：两个操作数同时加到ALU进行运算，输出会先存到缓冲器，然后再通过总线输入到目的寄存器。</span><br><span class="line">   - 三总线结构的运算器：两个输入端分别由两条总线供给，ALU的输出和第三条总线相连。</span><br><span class="line"></span><br><span class="line">#### 浮点运算方法和浮点运算器</span><br><span class="line"></span><br><span class="line">1. 浮点加法、浮点减法</span><br><span class="line"></span><br><span class="line">   - 0操作数检查</span><br><span class="line">   - 比较阶码大小并完成对阶：对阶是阶码小的数向阶码大的数对齐。小阶的尾数右移ΔE位（减小精度损失）。</span><br><span class="line">   - 尾数进行加或减运算：和定点加减法是相同的</span><br><span class="line">   - 结果规格化：还是尾数的绝对值在0.5~1之间。左移规格化、右移规格化</span><br><span class="line">   - 舍入处理：“0舍1入”，“恒置1”，就近舍入、朝0舍入、朝正无穷舍入、朝负无穷舍入。</span><br><span class="line">   - 溢出处理：浮点数的溢出一般是阶码溢出。尾数上溢：右规；尾数下溢出：舍入。</span><br><span class="line"></span><br><span class="line">   ![img](/images/2023-12-20-计算机组成原理/Fo6mvBlsaAlcAZY5ElMiOMJ3qJdq.png)</span><br><span class="line"></span><br><span class="line">2. 浮点乘法、除法运算</span><br><span class="line"></span><br><span class="line">   - 0操作数检查</span><br><span class="line">   - 阶码加/减操作</span><br><span class="line">   - 尾数乘/除操作：对于除法，要先将尾数进行调整才可以进行运算。</span><br><span class="line">   - 结果规格化及舍入处理</span><br><span class="line"></span><br><span class="line">3. 浮点运算流水线</span><br><span class="line">   ![image-20231220174129693](/images/2023-12-20-计算机组成原理/image-20231220174129693.png)流水线浮点加法器</span><br><span class="line"></span><br><span class="line">   ![image-20231220174258679](/images/2023-12-20-计算机组成原理/image-20231220174258679.png)</span><br><span class="line"></span><br><span class="line">## 第三章 存储系统</span><br><span class="line"></span><br><span class="line">#### 分类、分级和性能指标</span><br><span class="line"></span><br><span class="line">存储器、存储介质、存储为或存储元、存储单元。</span><br><span class="line"></span><br><span class="line">**分类**</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+存储介质：半导体存储器、光存储器、磁表面存储器
+存取方式：随机、顺序/半顺序存储器
+读写功能：读写、只读存储器
+信息可保存性：非永久、永久性记忆的存储器
+系统作用：主/辅助、高速缓冲/控制存储器
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">**分级**</span><br><span class="line"></span><br><span class="line">多级存储器体系结构：高速缓冲存储器（cache）、主存储器和外存储器。</span><br><span class="line"></span><br><span class="line">![image-20231221095614242](/images/2023-12-20-计算机组成原理/image-20231221095614242.png)</span><br><span class="line"></span><br><span class="line">内存：CPU可直接访问</span><br><span class="line"></span><br><span class="line">外存：调入内存中，才能被CPU处理</span><br><span class="line"></span><br><span class="line">几种常见电路：TTL门电路，存取速度快成本高，cache；MOS电路（PMOS，NMOS， CMOS），集成度高成本低，主存。</span><br><span class="line"></span><br><span class="line">**性能指标**</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+主要：存储容量、存取时间、存储周期和存储器带宽、可靠性、功耗与集成度、性价比
+字存储单元
+字节存储单元
+按字寻址的计算机
+按字节寻址的计算机
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">**存储芯片规格的表示**</span><br><span class="line"></span><br><span class="line">$$M×W$$,其中M使该芯片单元的总数，单位是兆。W是每个存储单元的容量，也就是SDRAM的位宽，单位是bit。</span><br><span class="line"></span><br><span class="line">&gt; SDRAM: Synchronous Dynamic Random Access Memory，同步动态随机存储器。同步是指其时钟频率和CPU前端总线的系统时钟相同，并且内部命令的发送与数据的传输都以它为基准；动态是指存储阵列需要不断的刷新来保证数据不丢失；随机是指数据不是线性依次存储，而是自由指定地址进行数据的读写。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### RAM存储器</span><br><span class="line"></span><br><span class="line">RAM: Random Access Memory.</span><br><span class="line"></span><br><span class="line">优点：存取速度快、体积小、可靠性高、价格低</span><br><span class="line"></span><br><span class="line">缺点：掉电掉信息</span><br><span class="line"></span><br><span class="line">RAM分为SRAM(static)和DRAM(dynamic)。</span><br><span class="line"></span><br><span class="line">**存储元**</span><br><span class="line"></span><br><span class="line">- 由锁存器（触发器）构成</span><br><span class="line">- 在直流电供电的条件下，信息可保持，断电后信息丢失。</span><br><span class="line"></span><br><span class="line">**基本的静态存储元阵列**</span><br><span class="line"></span><br><span class="line">##### ![image-20231221100856648](/images/2023-12-20-计算机组成原理/image-20231221100856648.png)SRAM存储器构成</span><br><span class="line"></span><br><span class="line">- 由存储体、地址译码电路（把二进制代码表示的地址转换成输出端的高电位，来驱动相应的读写电路）、读写电路和控制电路、驱动器、I/O电路、片选与读写控制电路等构成。</span><br><span class="line"></span><br><span class="line">- SRAM多采用双译码方式，首先X、Y向独立译码，然后在存储阵列中完成交叉译码。</span><br><span class="line">- 读写互锁逻辑</span><br><span class="line">  ![image-20231221101350475](/images/2023-12-20-计算机组成原理/image-20231221101350475.png)</span><br><span class="line"></span><br><span class="line">**SRAM的读写周期**</span><br><span class="line"></span><br><span class="line">- 读周期：存储片进行两次连续读操作时所必须间隔的时间。</span><br><span class="line">  ![image-20231221101508282](/images/2023-12-20-计算机组成原理/image-20231221101508282.png)</span><br><span class="line"></span><br><span class="line">- 写周期：有效期间地址和数据信号不能变化。</span><br><span class="line">  ![image-20231221101651860](/images/2023-12-20-计算机组成原理/image-20231221101651860.png)</span><br><span class="line"></span><br><span class="line">- 存储器与CPU连接：传递地址、数据和控制信息</span><br><span class="line"></span><br><span class="line">  涉及到几种扩容方式：</span><br><span class="line"></span><br><span class="line">  - 位扩展法：字变长，字数不变。数据线条数增加，地址线条数不变。</span><br><span class="line">    ![image-20231221102012784](/images/2023-12-20-计算机组成原理/image-20231221102012784.png)</span><br><span class="line">  - 字扩展法：字数变多，字长不变。</span><br><span class="line">    ![image-20231221102031956](/images/2023-12-20-计算机组成原理/image-20231221102031956.png)</span><br><span class="line">  - 字位同时扩展法：$$M×N$$的芯片可由$$(M/l) × (N / k)$$个$$l×k$$的芯片的芯片扩充。</span><br><span class="line"></span><br><span class="line">- 地址分配与片选逻辑</span><br><span class="line">  存储器的寻址逻辑：芯片内的寻址系统（二级译码）+芯片外的&lt;u&gt;地址分配（用于寻找片内的存储单元）&lt;/u&gt;与&lt;u&gt;片选逻辑（用于寻找芯片）&lt;/u&gt;。</span><br><span class="line">  地位分配给芯片（如一个4KB的芯片需要12($$2^&#123;12&#125;$$)位地址寻址），高位用于形成片选逻辑（可以通过译码器进行扩展）。</span><br><span class="line"></span><br><span class="line">##### DRAM存储器</span><br><span class="line"></span><br><span class="line">DRAM的存储元通过一个MOS晶体管和电容器组成记忆电路。</span><br><span class="line"></span><br><span class="line">**特点**</span><br><span class="line"></span><br><span class="line">- 增加了行地址锁存器和列地址锁存器。DRAM存储器的容量很大，地址线宽度要相应的增加，这会增加芯片地址线的管脚数目。为了避免这种情况，采取分时传送地址码的方式，</span><br><span class="line">- 增加了刷新计数器和相应的控制电路。DRAM读出后必须刷新，未读写的存储原也要定期刷新，且按行刷新（因此刷新计数器的长度等于行地址锁存器）。</span><br><span class="line"></span><br><span class="line">**DRAM的读写周期**</span><br><span class="line"></span><br><span class="line">- 读周期</span><br><span class="line">  ![image-20231221104308178](/images/2023-12-20-计算机组成原理/image-20231221104308178.png)</span><br><span class="line">- 写周期</span><br><span class="line">  ![image-20231221104325154](/images/2023-12-20-计算机组成原理/image-20231221104325154.png)</span><br><span class="line"></span><br><span class="line">**DRAM的刷新周期**</span><br><span class="line"></span><br><span class="line">刷新周期：从上一次对整个存储器刷新结束到下一次对整个存储器全部刷新一遍为止，这一段时间间隔称为刷新周期。</span><br><span class="line"></span><br><span class="line">- 集中刷新方式：前一部分读/写周期或维持周期，后一部分只进行刷新操作。刷新过程中不能进行读写的操作，因此这一部分时间称为死时间。</span><br><span class="line">  ![image-20231221104611750](/images/2023-12-20-计算机组成原理/image-20231221104611750.png)</span><br><span class="line">- 分散刷新方式：每个一段时间刷新一行。</span><br><span class="line">  ![image-20231221104720192](/images/2023-12-20-计算机组成原理/image-20231221104720192.png)</span><br><span class="line"></span><br><span class="line">**分时复用地址线**</span><br><span class="line"></span><br><span class="line">行列地址的信号在发送的时候使用相同的地址线，通过选通信号来决定应该发送行还是列的地址信号。</span><br><span class="line"></span><br><span class="line">半导体静态RAM是靠**触发器原理**存储信息；半导体动态RAM靠**电容存储电荷原理**存储信息。</span><br><span class="line"></span><br><span class="line">存储器在进行读写操作时，首先必须先接受**地址**信号，再接受**片选和读写**信号，最后才在数据总线上进行信息交换。</span><br><span class="line"></span><br><span class="line">**高级的DRAM结构**</span><br><span class="line"></span><br><span class="line">1. FPM-DRAM：快速页模式动态存储器，根据程序的局部性原理实现。读周期和写周期中，为了寻找一个确定的存储单元地址，首先由低电平的行选通信号确定行地址，然后由低电平的列选信号确定列地址。下一次寻找操作，也是由行选通信号选定行地址，列选信号选定列地址，依次类推。**快速页模式允许在选定的行中对每一个列地址进行连续快速的读操作或写操作**。</span><br><span class="line">2. CDRAM：在DRAM芯片上进程一个SRAM实现的小容量高速缓冲器，以改善芯片性能。</span><br><span class="line">   - 在SRAM读出期间可以同时对DRAM阵列刷新。</span><br><span class="line">   - 芯片内的数据输出路径与数据的输入路径是分开的，允许在写操作完成的同时来启动同一行的读操作。</span><br><span class="line">   - 对猝发式读取非常有利。</span><br><span class="line">     ![image-20231221112105433](/images/2023-12-20-计算机组成原理/image-20231221112105433.png)</span><br><span class="line"></span><br><span class="line">**DRAM主存读/写的正确性校验**</span><br><span class="line"></span><br><span class="line">![image-20231221112408253](/images/2023-12-20-计算机组成原理/image-20231221112408253.png)若写入存储器前与读出存储器后两部分的F运算结果一致，则存储器读写正确，否则给出错误信号。F是奇校验或偶校验的异或运算电路。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### 只读存储器和闪速存储器</span><br><span class="line"></span><br><span class="line">ROM: Read Only Memory，其最大的优点是具有非易失性。</span><br><span class="line"></span><br><span class="line">**ROM的分类**</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+掩模式ROM(M):数据在芯片制造过程中已确定
+一次编程ROM(PROM):熔丝烧断型PROM、PN结击穿型PROM
+多次编程ROM:光擦编程ROM(EPROM),电擦编程ROM(EEPROM)
+</code></pre></li>
+<li><p>掩模ROM</p>
+</li>
+<li>可编程ROM<ol>
+<li>EPROM<ul>
+<li>存储0: G1栅有电子积累，该MOS管的开启电压变得很高，即使G2栅为高电平，该管仍不能导通，相当于存储了”0”；</li>
+<li>存储1: G1栅无电子积累，MOS管的开启电压较低，当G2栅为高电平时，MOS管导通，相当于存储了“1”.</li>
+<li>擦除: 当用光子能量较高的紫外光照射G1浮栅时，G1中电子获得足够能量，穿过氧化层回到衬底，使浮栅上的电子消失，抹去了信息。</li>
+</ul>
+</li>
+<li>EEPROM<br>出厂时候存储的内容都是1，根据需要进行修改。</li>
+</ol>
+</li>
+</ol>
+<p><strong>FLASH存储器（Flash Memory）</strong></p>
+<ol>
+<li>特点<ul>
+<li>固有的非易失性</li>
+<li>廉价的高密度</li>
+<li>直接执行</li>
+<li>固态性能</li>
+</ul>
+</li>
+<li>Flash存储器的基本操作<ul>
+<li>编程操作：初始为1，写0就在控制栅上加正电压，为浮空栅补充电子。</li>
+<li>读取操作：当MOS晶体管导通时，电源<script type="math/tex">V_D</script>提供从漏极D到源极S的电流，读出电路检测到电流则表示1，无电流则表示0。</li>
+<li>擦除操作：采用电擦除，在源极加上正电压。</li>
+</ul>
+</li>
+</ol>
+<h4 id="并行存储器"><a href="#并行存储器" class="headerlink" title="并行存储器"></a>并行存储器</h4><p>CPU和存储器的速度不匹配，限制了高速计算。</p>
+<p><strong>双端口存储器DPRAM</strong></p>
+<ol>
+<li><p><u>同一个存储器具有两组相互独立的读写控制线路。</u></p>
+</li>
+<li><p>无冲突读写控制：当两个端口的地址不同时，在两个端口上进行读写操作，一定不会发生冲突。</p>
+</li>
+<li>有冲突的读写控制：当两个端口同时存取同一存储单元时，便发生读写冲突，为此设置BUSY标志。由存储器的仲裁逻辑决定有线对哪个端口进行读写操作。另一个端口暂时关闭。</li>
+</ol>
+<p><strong>多模块交叉存储器</strong></p>
+<ol>
+<li>存储器的模块化组织</li>
+<li>多模块交叉存储器的基本结构</li>
+</ol>
+<h4 id="cache存储器"><a href="#cache存储器" class="headerlink" title="cache存储器"></a>cache存储器</h4><p><strong>两个局部性原理</strong></p>
+<ol>
+<li>CPU对内存的访问在相对较短的时间间隔内往往集中于某个局部。</li>
+<li>在一小段时间内，最近被访问过的程序和数据很大可能再次被访问。</li>
+<li>解决这个问题，层次之间需要满足以下原则<ul>
+<li>一致性原则：处在不同层次存储器中的同一信息应保持相同的值</li>
+<li>包含性原则：存储在内层（靠近CPU）的信息一定被包含在其外层的存储介质中，反之不成立。</li>
+</ul>
+</li>
+</ol>
+<p><strong>cache的基本原理</strong></p>
+<ol>
+<li>把cache和主存分成若干大小相同的块</li>
+<li>cache主要由块表和快速存储器组成</li>
+<li>对主存地址，根据映象规则生成块号和候选位置</li>
+<li>根据块号和侯选位置查找块表，无则到主存取数据（R<strong>替换策略</strong>，W<strong>写回策略</strong>）；有则生成cache地址，查快速存储器读写数据（W<strong>写回策略</strong>）</li>
+<li>将从cache或主存取得得数据送处理器</li>
+</ol>
+<p>CPU和cache间得数据交换是以<strong>字</strong>为单位；cache与主存间的数据交换是以<strong>块</strong>为单位。</p>
+<p><strong>cache的命中率</strong></p>
+<p>设在一段程序执行期间，cache完成存取次数为<script type="math/tex">N_c</script>，主存完成存取次数为<script type="math/tex">N_m</script>，h定义为<u>命中率</u>，则<script type="math/tex">h=N_c/(N_c+N_m)</script>。</p>
+<p><u>平均访问时间</u>：<script type="math/tex">t_a=ht_c+(1-h)t_m</script></p>
+<p><u>访问效率</u>：<script type="math/tex">e=t_c/t_a=t_c/ht_c+(1-h)t_m=1/h+(1-h)r</script></p>
+<p><strong>主存与cache的地址映射</strong></p>
+<ol>
+<li><p>地址映射：把主存地址定位到cache中的方法。<br>三种地址映象：</p>
+<ul>
+<li><p>直接相联</p>
+</li>
+<li><p>全相联方式</p>
+<ul>
+<li><p>规则：1).主存与缓存分成大小相同的数据块。2).主存的某一数据块可以装入缓存的任意一块的空间中。<br><img src="/images/2023-12-20-计算机组成原理/image-20231221171425516.png" alt="image-20231221171425516"></p>
+<p><img src="/images/2023-12-20-计算机组成原理/image-20231221171446385.png" alt="image-20231221171446385"></p>
+</li>
+<li><p>转换公式：<br>主存地址长度=(s+w)位<br>寻址单位数=<script type="math/tex">2^w</script>个字或字节<br>块大小=行大小=<script type="math/tex">2^w</script>个字或字节<br>主存的块数=<script type="math/tex">2^s</script><br>标记大小=s位<br>cache的行数不由地址格式确定</p>
+</li>
+<li><p>特点<br>优点：冲突概率小，Cache的利用率高。<br>缺点：比较器难实现，需要一个访问速度很快代价高的相联存储器</p>
+</li>
+</ul>
+</li>
+<li><p>直接相联方式</p>
+<ul>
+<li><p>直接相联的地址映射规则：</p>
+<ol>
+<li>主存第<script type="math/tex">B_j</script>块内容拷贝到Cache的<script type="math/tex">L_i</script>行</li>
+<li>i = j mod m</li>
+<li><script type="math/tex; mode=display">m = 2^r$$, $$n=2^s</script></li>
+</ol>
+<p><img src="/images/2023-12-20-计算机组成原理/image-20231221195717407.png" alt="image-20231221195717407"><br><img src="/images/2023-12-20-计算机组成原理/image-20231221195741778.png" alt="image-20231221195741778"><br><img src="/images/2023-12-20-计算机组成原理/image-20231221195800811.png" alt="image-20231221195800811"></p>
+<p>优点：</p>
+<ul>
+<li>硬件实现很简单，不需要相联访问存储器</li>
+<li>访问速度也比较快，实际上不进行地址变换</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>块的冲突率比较高</li>
+</ul>
+</li>
+<li><p>组相联映射方式</p>
+<ul>
+<li>全相联映射和直接映射的优缺点刚好相反</li>
+<li>将cache分成u组，每组v行。<script type="math/tex">m=u×v</script>。组号<script type="math/tex">q=j</script> <script type="math/tex">mod</script> <script type="math/tex">u</script>。</li>
+<li>组间直接相联，组内全相联</li>
+</ul>
+<p><img src="/images/2023-12-20-计算机组成原理/image-20231221200525132.png" alt="image-20231221200525132"><br><img src="/images/2023-12-20-计算机组成原理/image-20231221200535784.png" alt="image-20231221200535784"></p>
+</li>
+<li><p>转换公式<br>主存地址长度=(s+w)位<br>寻址单元数=<script type="math/tex">2^{s+w}</script>个字或字节<br>块大小=行大小=<script type="math/tex">2^w</script>个字或字节<br>cache组数<script type="math/tex">u=2^d</script><br>标记大小=(s - d)位<br><img src="/images/2023-12-20-计算机组成原理/image-20231221201312052.png" alt="image-20231221201312052"></p>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>替换策略</strong></p>
+<ol>
+<li>最不经常使用算法LFU(Least Frequently Used): 一段时间内被访问次数最少的那一行。</li>
+<li>近期最少使用算法LRU(Least Recently Used): 近期内长久未被访问过的行换出。</li>
+<li>随机替换</li>
+</ol>
+<p><strong>cache的写操作策略</strong></p>
+<ol>
+<li>写回法：当写cache命中时，只修改cache的内容，<strong>而不立即写入主存</strong>；当写cache未命中时，把此块替换到cache中修改；写主存统一留到此行被换出时进行。</li>
+<li>全写法：当写cache命中时，cache和主存同时写修改；当写cache未命中时，直接写入主存。但是否把修改过的主存块取到cache中，有两种选择：一是取主存块到cache并为它分配一行位置；另一是不取主存块到cache。</li>
+<li>写一次法：写cache命中与未命中时和写回法基本相同，只是在<strong>第一次写命中时要写入主存</strong>。</li>
+</ol>
+</li>
+</ol>
+<h2 id="第四章-指令系统"><a href="#第四章-指令系统" class="headerlink" title="第四章 指令系统"></a>第四章 指令系统</h2><p>指令系统又叫指令集(Instruction Set)，是计算机体系结构设计的核心，是计算机软、硬件接口，是用机器语言、汇编语言编写程序的用户所能看到的计算机的基本属性。</p>
+<h4 id="指令系统的发展"><a href="#指令系统的发展" class="headerlink" title="指令系统的发展"></a>指令系统的发展</h4><h5 id="复杂指令集计算机"><a href="#复杂指令集计算机" class="headerlink" title="复杂指令集计算机"></a>复杂指令集计算机</h5><p><strong>CISC(Complex Instruction Set Computer)</strong></p>
+<script type="math/tex; mode=display">T_{cpu}=I_N×CPI×T_c</script><p>CISC是通过减少<script type="math/tex">I_N</script>值来减少<script type="math/tex">T_{cpu}</script>的</p>
+<p>其中<script type="math/tex">T_c</script>: 表示时钟周期。 <script type="math/tex">I_N</script>: 表示CPU执行某一程序中所包含的指令总数。<script type="math/tex">CPI</script>: 表示执行每条指令所需的平均时钟周期数</p>
+<p>特点</p>
+<ol>
+<li>指令系统复杂，指令数多，寻址方式多，指令格式多</li>
+<li>绝大多数指令需要多个机器时钟周期方可完成</li>
+<li>各种指令都可以访问存储器</li>
+<li>采用微程序控制</li>
+<li>有专用寄存器</li>
+<li>难以用优化编译生成高效的目标代码程序</li>
+</ol>
+<h5 id="精简指令集计算机"><a href="#精简指令集计算机" class="headerlink" title="精简指令集计算机"></a>精简指令集计算机</h5><p><strong>RISC(Reduced Instruction Set Computer)</strong></p>
+<script type="math/tex; mode=display">T_{cpu}=I_N×CPI×T_c</script><p><u>RISC是通过减少CPI值，简化结构来减少<script type="math/tex">T_{cpu}</script>。</u></p>
+<p>特点</p>
+<ol>
+<li>精简指令系统</li>
+<li>以寄存器-寄存器方式工作，除了load/Store指令访问存储器外，其余指令只访问寄存器</li>
+<li>除了Load/Store指令访问寄存器外，所有指令在一个机器时钟周期完成，并采用流水线技术</li>
+<li>使用较多的通用寄存器，一般至少32个，不允许有专用寄存器</li>
+<li>大多采用硬联线控制，少用或不用微程序实现</li>
+</ol>
+<h4 id="指令格式"><a href="#指令格式" class="headerlink" title="指令格式"></a>指令格式</h4><p>指令的一般结构形式：操作码字段（表示指令的操作特性与功能）+地址码字段（通常用于指定参与操作的操作数地址）</p>
+<h5 id="指令字长度"><a href="#指令字长度" class="headerlink" title="指令字长度"></a>指令字长度</h5><ul>
+<li>指令的长度是指一条指令所包含二进制代码的位数，取决于操作码长度和操作数地址个数及每个地址的长度。</li>
+<li>机器字长：计算机能直接处理的二进制数据的位数</li>
+<li>指令长度与机器字长的关系：半字长指令，单字长指令，双字长指令</li>
+</ul>
+<h5 id="操作码"><a href="#操作码" class="headerlink" title="操作码"></a>操作码</h5><p>定长编码，变长编码</p>
+<h5 id="地址码"><a href="#地址码" class="headerlink" title="地址码"></a>地址码</h5><ol>
+<li>零地址指令</li>
+<li>一地址指令</li>
+<li>二地址指令</li>
+<li>三地址指令</li>
+<li>指令助记符</li>
+</ol>
+<h5 id="操作数类型"><a href="#操作数类型" class="headerlink" title="操作数类型"></a>操作数类型</h5><p>地址数据、数值数据、字符数据、逻辑数据</p>
+<h5 id="指令和数据的寻址地址"><a href="#指令和数据的寻址地址" class="headerlink" title="指令和数据的寻址地址"></a>指令和数据的寻址地址</h5><p>寻址方式：采用地址指定方式时，形成操作数地址或指令地址的方式、指令寻址方式、数据寻址方式</p>
+<ol>
+<li><p>指令寻址方式：</p>
+<ul>
+<li>顺序寻址方式：程序指令按顺序存在内存中，然后顺序读出。</li>
+<li>跳跃寻址方式：程序要执行的指令的地址由上一个指令的地址码给出。</li>
+</ul>
+</li>
+<li><p>操作数寻址方式：</p>
+<p>例子：单地址：操作码+变址+间址+形式地址（偏移量，逻辑地址）—&gt;有效地址：真实地址，物理地址<br>有效地址由形式地址和寻址方式特征位等共同确定，实际上就是将形式地址转化为有效地址</p>
+<ul>
+<li>隐含寻址(Implied Addressing)：不明显指定操作数的地址，在指令中隐含着操作数的地址。</li>
+<li>立即寻址(Immediate Addressing)：地址字段指出的不是操作数地址，而是操作数本身。</li>
+<li>直接寻址(Direct Addressing)：地址字段直接指出操作数在内存中地址。</li>
+<li>间接寻址(Indirect Addressing)：地址字段中的D是操作数地址的指针。</li>
+<li>寄存器寻址(Register Addressing)和寄存器间接寻址(Register Indirect Addressing)：寄存器中存放的是操作数和操作数在内存中的地址。</li>
+<li>相对寻址方式(Relative Addressing)：把PC的内容加上指令格式中形式地址D而形成操作数的有效地址。</li>
+<li>基址寻址方式(Base-Register Addressing)：把基址寄存器的内容加上指令格式中D而形成操作数的E。</li>
+<li>变址寻址方式(Index Addressing)：把某个变址寄存器的内容加上指令格式中D而形成操作数的E。</li>
+<li>块寻址方式(Block Addressing)：用在I/O指令中，以实现<u>外存储器</u>或<u>外围设备</u>同<u>内存</u>之间的<u>数据块传送</u>，还适用于<u>内存的数据块搬家</u>。</li>
+<li>段寻址方式(Segment Addressing)：E由段寄存器的内容加上段内偏移地址而形成</li>
+<li>堆栈寻址方式</li>
+</ul>
+</li>
+</ol>
+<h5 id="典型指令"><a href="#典型指令" class="headerlink" title="典型指令"></a>典型指令</h5><p><strong>指令的分类</strong></p>
+<ol>
+<li>数据传送指令</li>
+<li>算术运算指令</li>
+<li>逻辑运算指令</li>
+<li>程序控制指令</li>
+<li>输入输出指令</li>
+<li>字符串处理指令</li>
+<li>特权指令</li>
+<li>其它指令</li>
+</ol>
+<h2 id="第五章-中央处理器"><a href="#第五章-中央处理器" class="headerlink" title="第五章 中央处理器"></a>第五章 中央处理器</h2><h2 id="第六章-总线系统"><a href="#第六章-总线系统" class="headerlink" title="第六章 总线系统"></a>第六章 总线系统</h2><h2 id="第七章-外围设备"><a href="#第七章-外围设备" class="headerlink" title="第七章 外围设备"></a>第七章 外围设备</h2><h2 id="第八章-输入输出系统"><a href="#第八章-输入输出系统" class="headerlink" title="第八章 输入输出系统"></a>第八章 输入输出系统</h2>]]></content>
+      <categories>
+        <category>课程</category>
+        <category>计算机组成原理</category>
+      </categories>
+      <tags>
+        <tag>课程</tag>
+        <tag>计算机组成原理</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>fpsAim</title>
+    <url>/2023/11/18/2023-11-18-fpsAim/</url>
+    <content><![CDATA[<p><strong>开发文档</strong></p>
+<ol>
+<li><p>C++跑通demo（已完成）</p>
+<ul>
+<li>使用现成的模型</li>
+</ul>
+</li>
+<li><p>修改demo，更改检测类别（人物）（已完成）</p>
+</li>
+<li><p>opencv实现屏幕视频流实时检测（已完成）</p>
+<ul>
+<li>位图转化为Mat类（已完成）</li>
+</ul>
+</li>
+<li><p>绘制框并且在屏幕中展示（已完成）</p>
+<ul>
+<li><p>修改图片轨道数</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">cv::<span class="built_in">cvtColor</span>(img, img, cv::COLOR_RGBA2RGB);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>成功检测，但整体帧率较低<br><img src="/images/2023-11-18-fpsAim/image-20231118202458024.png" alt="image-20231118202458024"></p>
+</li>
+</ul>
+</li>
+<li><p>优化检测速率</p>
+<ul>
+<li><p>使用GPU加速训练</p>
+<ul>
+<li><p>安装cuda和cudnn（已安装）</p>
+</li>
+<li><p>重新编译支持cuda的opencv版本</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">cv::cuda::<span class="built_in">printShortCudaDeviceInfo</span>(cv::cuda::<span class="built_in">getDevice</span>());</span><br><span class="line"><span class="type">int</span> cudaDeviceCount = cv::cuda::<span class="built_in">getCudaEnabledDeviceCount</span>();</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">OpenCV(4.8.0) Error: No CUDA support (The library is compiled without CUDA support) in throw_no_cuda, file F:\dev\vcpkg\buildtrees\opencv4\src\4.8.0-28394c3990.clean\modules\core\include\opencv2/core/private.cuda.hpp, line 106</span><br></pre></td></tr></table></figure>
+<p><img src="/images/2023-11-18-fpsAim/image-20231118204612848.png" alt="image-20231118204612848"></p>
+<p>（opencv-cuda模块一次编译约为2小时…）</p>
+<p><strong>编译完成</strong></p>
+<p><img src="/images/2023-11-18-fpsAim/image-20231118222656606.png" alt="image-20231118222656606"></p>
+<p><strong>重新打开项目测试cuda是否可用</strong></p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">cv::cuda::<span class="built_in">printCudaDeviceInfo</span>(cv::cuda::<span class="built_in">getDevice</span>());</span><br><span class="line"><span class="type">int</span> count = cv::cuda::<span class="built_in">getCudaEnabledDeviceCount</span>();</span><br><span class="line"><span class="keyword">if</span> (count &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;GPU Device Count：%d\n&quot;</span>, count);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="/images/2023-11-18-fpsAim/image-20231118225033140.png" alt="image-20231118225033140"></p>
+<p>结果这个版本的opencv没法使用cudnn加速。</p>
+<p><img src="/images/2023-11-18-fpsAim/image-20231120170426409.png" alt="image-20231120170426409"></p>
+<p><strong>重新下载</strong></p>
+<p>vcpkg再次编译（共计20小时），源文件近300g（幸好事先清空了F盘，后续会对源码进行删除）。</p>
+<p><img src="/images/2023-11-18-fpsAim/image-20231120170712345.png" alt="image-20231120170712345"></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<pre><code>   **重新检测**
+
+   ![image-20231120170630641](/images/2023-11-18-fpsAim/image-20231120170630641.png)
+
+   ![image-20231120170841328](/images/2023-11-18-fpsAim/image-20231120170841328.png)
+
+   还是不行
+
+   垃圾`vcpkg`，我还是手动编译吧，使用CMAKE进行编译。
+</code></pre>]]></content>
+      <categories>
+        <category>C++</category>
+      </categories>
+      <tags>
+        <tag>C++</tag>
+        <tag>脚本</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title></title>
+    <url>/2023/12/21/%E9%83%A8%E7%BD%B2%E6%96%87%E6%A1%A3/</url>
+    <content><![CDATA[<h2 id="模型验证"><a href="#模型验证" class="headerlink" title="模型验证"></a>模型验证</h2><h3 id="1-本地测试"><a href="#1-本地测试" class="headerlink" title="1.本地测试"></a>1.本地测试</h3><h4 id="1-Docker部分"><a href="#1-Docker部分" class="headerlink" title="1. Docker部分"></a><strong>1. Docker部分</strong></h4><p>Docker的核心概念有以下3点</p>
+<p><strong>1. 镜像（image）</strong></p>
+<p><strong>2. 容器（Container）</strong></p>
+<p><strong>3. 仓库（Registry）</strong></p>
+<p>最后一个不用管，只需要使用docker镜像来创建容器即可，相关的操作都在容器内部进行。</p>
+<p>安装docker可以参考以下这篇文章</p>
+<p><a href="https://blog.csdn.net/baidu_36511315/article/details/108117826?ops_request_misc=%7B%22request%5Fid%22%3A%22170054498816800226525294%22%2C%22scm%22%3A%2220140713.130102334..%22%7D&amp;request_id=170054498816800226525294&amp;biz_id=0&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_positive~default-4-108117826-null-null.142^v96^pc_search_result_base5&amp;utm_term=docker安装&amp;spm=1018.2226.3001.4187">docker安装使用</a></p>
+<p>安装完成后可以使用指令查看镜像：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker images</span><br></pre></td></tr></table></figure>
+<p>加载镜像：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker load --input 这里填镜像名称.tar</span><br></pre></td></tr></table></figure>
+<p>查看是否导入成功：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker images</span><br></pre></td></tr></table></figure>
+<p>创建容器：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker run [option] 镜像名 [向启动容器中传入的命令]</span><br></pre></td></tr></table></figure>
+<p>以上操作可以参考这篇文章<a href="https://blog.csdn.net/m0_37714245/article/details/81713477">Docker基本操作</a></p>
+<p>进入容器后将文件传送至容器内</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker cp 本地文件路径 容器ID/容器NAME:容器内路径</span><br></pre></td></tr></table></figure>
+<p>例子：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker cp /Users/wuhanxue/Downloads/rabbitmq_delayed_message_exchange-3.9.0.ez 1faca6a70742:/opt/rabbitmq/plugins</span><br></pre></td></tr></table></figure>
+<p>然后就和在linux主机中开发是一样的了。</p>
+<p>通过终端执行命令（python已经预先装好，torch等运行必须环境也已经配置完成）。</p>
+<p>进入目录后</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">python car_speed_check.py</span><br><span class="line">python fall_det.py</span><br><span class="line">python fight_det.py</span><br></pre></td></tr></table></figure>
+<p>首先在主机端依次测试</p>
+<p>结果将保存在<code>test_vids_preds</code>文件夹下。</p>
+<h3 id="2-部署到盒子"><a href="#2-部署到盒子" class="headerlink" title="2.部署到盒子"></a>2.部署到盒子</h3><p>模型已经预先安装好在<code>SE5/ruixin/yolov5</code>下，把文件直接拷贝进盒子即可。</p>
+<p>盒子内的操作和linux操作系统一样。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">scp 本地文件路径 linaro@192.168.150.1:盒子路径</span><br></pre></td></tr></table></figure>
+<p>盒子已经预先配置好了<code>sophon-sail</code>，只需要直接执行<code>SE5</code>文件夹下的</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">yolov5_car_speed_check_batch_opencv.py</span><br><span class="line">yolov5_fall_det_batch_opencv.py</span><br><span class="line">yolov5_fight_det_batch_opencv.py</span><br></pre></td></tr></table></figure>
+<p>即可。</p>
+]]></content>
+  </entry>
 </search>
